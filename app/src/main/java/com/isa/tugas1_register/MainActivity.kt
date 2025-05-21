@@ -1,7 +1,7 @@
 package com.isa.tugas1_register
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -48,6 +48,23 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    private fun showSuccessDialog(fullName: String, username: String, password: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Success")
+            .setMessage("Registrasi berhasil!")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+                val intent = Intent(this, LoginActivity::class.java).apply {
+                    putExtra("username", username)
+                    putExtra("password", password)
+                    putExtra("fullName", fullName)
+                }
+                startActivity(intent)
+                finish()
+            }
+            .show()
+    }
+
     private fun validateAndRegister() {
         val fullName = fullNameInput.text.toString().trim()
         val username = usernameInput.text.toString().trim()
@@ -55,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         val confirmPassword = confirmPasswordInput.text.toString()
 
         if (fullName.isEmpty()) {
-            fullNameInput.error = "Full name is required"
+            fullNameInput.error = "Nama Lengkap tidak boleh kosong"
             return
         }
 
@@ -81,10 +98,6 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        Toast.makeText(this, "Registrasi berhasil!", Toast.LENGTH_SHORT).show()
-        fullNameInput.text?.clear()
-        usernameInput.text?.clear()
-        passwordInput.text?.clear()
-        confirmPasswordInput.text?.clear()
+        showSuccessDialog(fullName, username, password)
     }
 }
